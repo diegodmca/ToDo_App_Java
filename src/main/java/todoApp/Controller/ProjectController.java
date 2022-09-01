@@ -17,13 +17,11 @@ import todoApp.util.ConnectionFactory;
  */
 public class ProjectController {
     
-    public void save(Project project) throws SQLException{
+    public void save(Project project){
         
-        String sql = "INSERT INTO projects (name, "
-                + "description, "
-                + "createdAt, "
-                + "updatedAt) VALUES (?, ?, ?, ?)";
-    
+
+        String sql = "INSERT INTO projects(name, description, createdAt, updatedAt) VALUES (?, ?, ?, ?)";
+
         Connection connection = null;
         PreparedStatement statement = null;
         
@@ -40,8 +38,8 @@ public class ProjectController {
         } catch (Exception ex) {
             System.out.println(ex);
             
-            throw new RuntimeException("Erro ao salvar o projeto "
-            + ex.getMessage(), ex);
+            throw new RuntimeException("Erro ao salvar o projeto ", ex);
+           
             
                     
             
