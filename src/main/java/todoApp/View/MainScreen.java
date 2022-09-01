@@ -10,6 +10,8 @@ import javax.swing.DefaultListModel;
 import todoApp.Controller.ProjectController;
 import todoApp.Controller.TaskController;
 import todoApp.Model.Project;
+import todoApp.Model.Task;
+import todoApp.util.TaskTableModel;
 
 /**
  *
@@ -21,6 +23,8 @@ public class MainScreen extends javax.swing.JFrame {
     TaskController taskController;
     
     DefaultListModel projectModel;
+    TaskTableModel taskModel;
+    
     
     
 
@@ -290,6 +294,7 @@ public class MainScreen extends javax.swing.JFrame {
         jTableTasks.setGridColor(new java.awt.Color(255, 255, 255));
         jTableTasks.setRowHeight(50);
         jTableTasks.setSelectionBackground(new java.awt.Color(204, 255, 204));
+        jTableTasks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTableTasks.setShowVerticalLines(false);
         jScrollPaneTasks.setViewportView(jTableTasks);
 
@@ -306,9 +311,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newTaskBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPaneTasks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPaneTasks))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -432,7 +435,18 @@ public void initComponentsModel(){
     projectModel = new DefaultListModel();
     loadProjects();
     
+    taskModel = new TaskTableModel();
+    jTableTasks.setModel(taskModel);
+    loadTasks(1);
 }
+
+public void loadTasks(int idProject){
+    List<Task> tasks = taskController.getAll(idProject);
+    taskModel.setTasks(tasks);
+    
+    
+}
+
 public void loadProjects(){
     List<Project> projects = projectController.getAll();
     
