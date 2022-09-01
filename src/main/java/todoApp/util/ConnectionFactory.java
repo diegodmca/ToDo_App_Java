@@ -19,9 +19,14 @@ public class ConnectionFactory {
     
     public static java.sql.Connection getConnection() {
         try {
+           
             Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASS);
+            
         } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println("Erro na Conexao");
+            
             throw new RuntimeException("Erro na conexao com o banco de dados", ex);
         }
     }

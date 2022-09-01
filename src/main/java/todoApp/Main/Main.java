@@ -1,7 +1,7 @@
 
 package todoApp.Main;
 
-import java.util.List;
+
 import todoApp.Controller.ProjectController;
 import todoApp.Model.Project;
 
@@ -26,10 +26,6 @@ public class Main {
        
 
 //projectController.save(project);
-       
-       
-       
-
 //project.setName("Novo nome do projeto");
 //projectController.update(project);
 //

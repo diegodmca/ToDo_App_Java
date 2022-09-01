@@ -23,7 +23,7 @@ public class ProjectController {
                 + "description, "
                 + "createdAt, "
                 + "updatedAt) VALUES (?, ?, ?, ?)";
-        
+    
         Connection connection = null;
         PreparedStatement statement = null;
         
@@ -38,9 +38,12 @@ public class ProjectController {
             statement.execute();
             
         } catch (Exception ex) {
+            System.out.println(ex);
             
             throw new RuntimeException("Erro ao salvar o projeto "
             + ex.getMessage(), ex);
+            
+                    
             
         } finally {
             
@@ -49,7 +52,6 @@ public class ProjectController {
         }  
         
     }
-    
     
         public void update(Project project){
             String sql = "UPDATE projects SET name = ?, "
@@ -77,10 +79,6 @@ public class ProjectController {
       }
             
         }
-        
-         
-    
-    
     public List<Project> getAll(){
         
         String sql = "SELECT * FROM projects";
@@ -146,17 +144,7 @@ String sql = "DELETE FROM projects WHERE id = ?";
             ConnectionFactory.closeConnection(connection, statement);
         }
  }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+       
 }
         
     

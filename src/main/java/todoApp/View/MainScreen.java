@@ -1,17 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package todoApp.View;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import todoApp.Controller.ProjectController;
+import todoApp.Controller.TaskController;
+import todoApp.Model.Project;
 
 /**
  *
  * @author diegocarvalho
  */
 public class MainScreen extends javax.swing.JFrame {
+    
+    ProjectController projectController;
+    TaskController taskController;
+    
+    DefaultListModel projectModel;
+    
+    
 
     /**
      * Creates new form MainScreen
@@ -19,6 +30,9 @@ public class MainScreen extends javax.swing.JFrame {
     public MainScreen() {
         initComponents();
         decorateTableTask();
+        initDataController();
+        initComponentsModel();
+        
         
     }
 
@@ -153,6 +167,11 @@ public class MainScreen extends javax.swing.JFrame {
         npbTitle.setText("Projetos");
 
         npbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add.png"))); // NOI18N
+        npbIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                npbIconMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout newProjectBlockLayout = new javax.swing.GroupLayout(newProjectBlock);
         newProjectBlock.setLayout(newProjectBlockLayout);
@@ -161,7 +180,7 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(newProjectBlockLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(npbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(npbIcon)
                 .addContainerGap())
         );
@@ -183,6 +202,11 @@ public class MainScreen extends javax.swing.JFrame {
         ntbTitle.setText("Tarefas");
 
         ntbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add.png"))); // NOI18N
+        ntbIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ntbIconMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout newTaskBlockLayout = new javax.swing.GroupLayout(newTaskBlock);
         newTaskBlock.setLayout(newTaskBlockLayout);
@@ -213,11 +237,6 @@ public class MainScreen extends javax.swing.JFrame {
         lb_List.setBackground(new java.awt.Color(255, 255, 255));
         lb_List.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         lb_List.setForeground(new java.awt.Color(0, 0, 0));
-        lb_List.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         lb_List.setFixedCellHeight(50);
         lb_List.setSelectionBackground(new java.awt.Color(0, 153, 102));
         lb_List.setSelectionForeground(new java.awt.Color(255, 255, 255));
@@ -288,7 +307,6 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newTaskBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addComponent(jScrollPaneTasks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -301,18 +319,39 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(newProjectBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(newTaskBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(listPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(listPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPaneTasks, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void npbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_npbIconMouseClicked
+        ProjectDialogScreen projectDialogScreen = new ProjectDialogScreen(this, rootPaneCheckingEnabled);
+        projectDialogScreen.setVisible(true);
+        projectDialogScreen.addWindowListener(new WindowAdapter(){
+           public void windowClosed(WindowEvent e) {
+               loadProjects();
+               System.out.println("Projetos carregados");
+           }
+        });
+        
+        
+        
+    }//GEN-LAST:event_npbIconMouseClicked
+
+    private void ntbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntbIconMouseClicked
+        TaskDialogScreen taskDialogScreen = new TaskDialogScreen(this, rootPaneCheckingEnabled);
+        //taskDialogScreen.setProject(null);
+        taskDialogScreen.setVisible(true);
+        
+        
+        
+    }//GEN-LAST:event_ntbIconMouseClicked
 
     /**
      * @param args the command line arguments
@@ -380,8 +419,32 @@ public void decorateTableTask(){
     
     // cria o sorter na coluna
     jTableTasks.setAutoCreateRowSorter(true);
+}
+
+
+public void initDataController(){
+        projectController = new ProjectController();
+        taskController = new TaskController();  
+    }
+
+public void initComponentsModel(){
     
+    projectModel = new DefaultListModel();
+    loadProjects();
     
+}
+public void loadProjects(){
+    List<Project> projects = projectController.getAll();
+    
+    projectModel.clear();
+    
+    for (int i = 0; i < projects.size(); i++){
+        Project project = projects.get(i);
+        projectModel.addElement(project);
+        
+    }
+    
+    lb_List.setModel(projectModel);
     
 }
 
