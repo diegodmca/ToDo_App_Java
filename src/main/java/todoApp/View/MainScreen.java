@@ -11,6 +11,8 @@ import todoApp.Controller.ProjectController;
 import todoApp.Controller.TaskController;
 import todoApp.Model.Project;
 import todoApp.Model.Task;
+import todoApp.util.ButtonColumnCellRenderer;
+import todoApp.util.DeadlineColumnCellRenderer;
 import todoApp.util.TaskTableModel;
 
 /**
@@ -25,17 +27,14 @@ public class MainScreen extends javax.swing.JFrame {
     DefaultListModel projectModel;
     TaskTableModel taskModel;
     
-    
-    
-
     /**
      * Creates new form MainScreen
      */
     public MainScreen() {
         initComponents();
-        decorateTableTask();
         initDataController();
         initComponentsModel();
+        decorateTableTask();
     }
 
     /**
@@ -367,17 +366,19 @@ public class MainScreen extends javax.swing.JFrame {
         Task task = taskModel.getTasks().get(rowIndex);
         
         switch(columnIndex){
-            case 3: 
-              
+             case 3: 
               taskController.update(task);
+              
              case 4: 
                  break;
+                 
              case 5:
                  taskController.removeById(task.getId());
                  taskModel.getTasks().remove(task);
-               int projectIndex = lb_List.getSelectedIndex();
-               Project project = (Project) projectModel.get(projectIndex);
-               loadTasks(project.getId());
+                 
+                 int projectIndex = lb_List.getSelectedIndex();
+                 Project project = (Project) projectModel.get(projectIndex);
+                 loadTasks(project.getId());
                  
                  break;
         }
@@ -454,6 +455,15 @@ public void decorateTableTask(){
     jTableTasks.getTableHeader().setBackground(new Color(0, 153, 102));
     jTableTasks.getTableHeader().setForeground(new Color(255, 255, 255));
     
+    jTableTasks.getColumnModel().getColumn(2)
+            .setCellRenderer(new DeadlineColumnCellRenderer());
+    
+    jTableTasks.getColumnModel().getColumn(4)
+            .setCellRenderer(new ButtonColumnCellRenderer("edit"));
+    
+    jTableTasks.getColumnModel().getColumn(5)
+            .setCellRenderer(new ButtonColumnCellRenderer("delete"));
+    
     // cria o sorter na coluna
     jTableTasks.setAutoCreateRowSorter(true);
 }
@@ -471,8 +481,9 @@ public void initComponentsModel(){
     
     taskModel = new TaskTableModel();
     jTableTasks.setModel(taskModel);
-   // jTableTasks.getColumnModel().getColumn(4).setCellRenderer(new ButtonColumnCellRederer("edit"));
-       // jTableTasks.getColumnModel().getColumn(5).setCellRenderer(new ButtonColumnCellRederer("delete"));
+        //jTableTasks.getColumnModel().getColumn(2).setCellRenderer(new StatusColumnCellRenderer());
+        jTableTasks.getColumnModel().getColumn(4).setCellRenderer(new ButtonColumnCellRenderer("edit"));
+        jTableTasks.getColumnModel().getColumn(5).setCellRenderer(new ButtonColumnCellRenderer("delete"));
 
         if (!projectModel.isEmpty()) {
             lb_List.setSelectedIndex(0);
@@ -495,7 +506,6 @@ public void loadTasks(int idProject){
                 mainEmptyList.setVisible(false);
                 mtpMain.remove(mainEmptyList);
             }
-
             mtpMain.add(jScrollPaneTasks);
             jScrollPaneTasks.setVisible(true);
             jScrollPaneTasks.setSize(mtpMain.getWidth(), mtpMain.getHeight());
