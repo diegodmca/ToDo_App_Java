@@ -31,10 +31,16 @@ public class MainScreen extends javax.swing.JFrame {
      * Creates new form MainScreen
      */
     public MainScreen() {
+        
+        
         initComponents();
         initDataController();
+        
+        
         initComponentsModel();
         decorateTableTask();
+        
+        
     }
 
     /**
@@ -149,6 +155,7 @@ public class MainScreen extends javax.swing.JFrame {
         npbTitle.setForeground(new java.awt.Color(0, 153, 102));
         npbTitle.setText("Projetos");
 
+        npbIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         npbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add.png"))); // NOI18N
         npbIcon.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -164,8 +171,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(npbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(npbIcon)
-                .addContainerGap())
+                .addComponent(npbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         newProjectBlockLayout.setVerticalGroup(
             newProjectBlockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,6 +190,7 @@ public class MainScreen extends javax.swing.JFrame {
         ntbTitle.setForeground(new java.awt.Color(0, 153, 102));
         ntbTitle.setText("Tarefas");
 
+        ntbIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ntbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add.png"))); // NOI18N
         ntbIcon.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -198,19 +205,16 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(newTaskBlockLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ntbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ntbIcon)
-                .addContainerGap())
+                .addGap(494, 494, 494)
+                .addComponent(ntbIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         newTaskBlockLayout.setVerticalGroup(
             newTaskBlockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newTaskBlockLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(newTaskBlockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ntbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(newTaskBlockLayout.createSequentialGroup()
-                        .addComponent(ntbIcon)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGroup(newTaskBlockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ntbIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ntbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -328,12 +332,12 @@ public class MainScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void npbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_npbIconMouseClicked
-        ProjectDialogScreen projectDialogScreen = new ProjectDialogScreen(this, rootPaneCheckingEnabled);
+       ProjectDialogScreen projectDialogScreen = new ProjectDialogScreen(this, true);
         projectDialogScreen.setVisible(true);
-        projectDialogScreen.addWindowListener(new WindowAdapter(){
-           public void windowClosed(WindowEvent e) {
-               loadProjects();
-               System.out.println("Projetos carregados");
+
+        projectDialogScreen.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                loadProjects();
            }
         });
         
@@ -341,15 +345,14 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void ntbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntbIconMouseClicked
         TaskDialogScreen taskDialogScreen = new TaskDialogScreen(this, rootPaneCheckingEnabled);
-        //taskDialogScreen.setProject(null);
         int projectIndex = lb_List.getSelectedIndex();
         Project project = (Project) projectModel.get(projectIndex);
         taskDialogScreen.setProject(project);
-        
         taskDialogScreen.setVisible(true);
         
         taskDialogScreen.addWindowListener(new WindowAdapter(){
-            public void windowClosed(WindowEvent e) {
+         
+            public void windowClosed(WindowEvent evt) {
                 int projectIndex = lb_List.getSelectedIndex();
                 Project project = (Project) projectModel.get(projectIndex);
                 loadTasks(project.getId());
@@ -384,6 +387,7 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTableTasksMouseClicked
 
+    
     private void lb_ListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_ListMouseClicked
        int projectIndex = lb_List.getSelectedIndex();
        Project project = (Project) projectModel.get(projectIndex);
@@ -465,7 +469,7 @@ public void decorateTableTask(){
             .setCellRenderer(new ButtonColumnCellRenderer("delete"));
     
     // cria o sorter na coluna
-    jTableTasks.setAutoCreateRowSorter(true);
+    //jTableTasks.setAutoCreateRowSorter(true);
 }
 
 
@@ -481,7 +485,7 @@ public void initComponentsModel(){
     
     taskModel = new TaskTableModel();
     jTableTasks.setModel(taskModel);
-        //jTableTasks.getColumnModel().getColumn(2).setCellRenderer(new StatusColumnCellRenderer());
+        
         jTableTasks.getColumnModel().getColumn(4).setCellRenderer(new ButtonColumnCellRenderer("edit"));
         jTableTasks.getColumnModel().getColumn(5).setCellRenderer(new ButtonColumnCellRenderer("delete"));
 

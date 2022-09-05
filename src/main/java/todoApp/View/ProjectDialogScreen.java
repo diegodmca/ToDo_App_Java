@@ -69,8 +69,8 @@ public class ProjectDialogScreen extends javax.swing.JDialog {
             ProjectBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ProjectBannerLayout.createSequentialGroup()
                 .addComponent(pbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(321, 321, 321)
+                .addComponent(pbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         ProjectBannerLayout.setVerticalGroup(
@@ -157,17 +157,19 @@ public class ProjectDialogScreen extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void pbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pbIconMouseClicked
-        
+         
         try {
-        Project project = new Project();
-        project.setName(ppNameField.getText());
-        project.setDescription(pspDescriptionField.getText());
-        System.out.println(project);
-        controller.save(project);
-        
-        
-        JOptionPane.showMessageDialog(rootPane, "Projeto Cadastrado!");
-        
+            if (!ppNameField.getText().equals("")){
+                Project project = new Project();
+                project.setName(ppNameField.getText());
+                project.setDescription(pspDescriptionField.getText());
+                controller.save(project);
+                JOptionPane.showMessageDialog(rootPane, "Projeto Cadastrado!");
+                
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Deve preencher o campo Nome!");
+                
+            }
         } catch (Exception ex) {
             
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());

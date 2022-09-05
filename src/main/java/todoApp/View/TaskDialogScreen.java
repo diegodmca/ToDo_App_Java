@@ -25,10 +25,9 @@ public class TaskDialogScreen extends javax.swing.JDialog {
     public TaskDialogScreen(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        hideErrorFields();
         
         controller = new TaskController();
-        
-        
     }
 
     /**
@@ -54,6 +53,8 @@ public class TaskDialogScreen extends javax.swing.JDialog {
         tpTitleNotes = new javax.swing.JLabel();
         tpScrollPaneNotes = new javax.swing.JScrollPane();
         tpScrollText = new javax.swing.JTextArea();
+        jLabelNameError = new javax.swing.JLabel();
+        jLabelDeadlineError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -79,8 +80,8 @@ public class TaskDialogScreen extends javax.swing.JDialog {
             taskBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taskBannerLayout.createSequentialGroup()
                 .addComponent(tbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(tbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(321, 321, 321)
+                .addComponent(tbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         taskBannerLayout.setVerticalGroup(
@@ -133,6 +134,12 @@ public class TaskDialogScreen extends javax.swing.JDialog {
         tpScrollText.setRows(5);
         tpScrollPaneNotes.setViewportView(tpScrollText);
 
+        jLabelNameError.setForeground(new java.awt.Color(255, 51, 51));
+        jLabelNameError.setText("(Campo nome obrigatorio)");
+
+        jLabelDeadlineError.setForeground(new java.awt.Color(255, 51, 51));
+        jLabelDeadlineError.setText("(Campo prazo obrigatorio)");
+
         javax.swing.GroupLayout taskPanelLayout = new javax.swing.GroupLayout(taskPanel);
         taskPanel.setLayout(taskPanelLayout);
         taskPanelLayout.setHorizontalGroup(
@@ -143,21 +150,29 @@ public class TaskDialogScreen extends javax.swing.JDialog {
                     .addComponent(tpScrollPaneNotes, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(tpScrollField, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
                     .addComponent(tbNameField)
+                    .addComponent(tpDeadlineField)
                     .addGroup(taskPanelLayout.createSequentialGroup()
                         .addGroup(taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tpTitleName)
                             .addComponent(tpTitleDescription)
-                            .addComponent(tpTitleDeadline)
-                            .addComponent(tpTitleNotes))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(tpDeadlineField))
+                            .addGroup(taskPanelLayout.createSequentialGroup()
+                                .addComponent(tpTitleDeadline)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelDeadlineError, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tpTitleNotes)
+                            .addGroup(taskPanelLayout.createSequentialGroup()
+                                .addComponent(tpTitleName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelNameError, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         taskPanelLayout.setVerticalGroup(
             taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(taskPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tpTitleName)
+                .addGroup(taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tpTitleName)
+                    .addComponent(jLabelNameError))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -165,7 +180,9 @@ public class TaskDialogScreen extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tpScrollField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(tpTitleDeadline)
+                .addGroup(taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tpTitleDeadline)
+                    .addComponent(jLabelDeadlineError))
                 .addGap(3, 3, 3)
                 .addComponent(tpDeadlineField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -200,13 +217,16 @@ public class TaskDialogScreen extends javax.swing.JDialog {
     private void tbIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbIconMouseClicked
         try {
             
-            Task task = new Task();
+            if(isFieldsValid()){
+                
+                   Task task = new Task();
             task.setIdproject(project.getId());
            
             task.setName(tbNameField.getText());
             task.setDescription(tpDescriptionText.getText());
             task.setNotes(tpScrollText.getText());
             task.setCompleted(false);
+            
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date deadline = null;
             
@@ -216,13 +236,25 @@ public class TaskDialogScreen extends javax.swing.JDialog {
             controller.save(task);
             
             JOptionPane.showMessageDialog(rootPane, "Tarefa salva com sucesso");
+            this.dispose();
             
+        }else{
+                
+            hideErrorFields(); 
+            
+            if(tbNameField.getText().isEmpty()){
+                jLabelNameError.setVisible(true);
+            }
+            if(tpDeadlineField.getText().isEmpty()){
+                jLabelDeadlineError.setVisible(true);
+            }
              
+             
+           }
         }catch (Exception ex){
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
              }
         
-        this.dispose();
     }//GEN-LAST:event_tbIconMouseClicked
 
     /**
@@ -269,6 +301,8 @@ public class TaskDialogScreen extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelDeadlineError;
+    private javax.swing.JLabel jLabelNameError;
     private javax.swing.JPanel taskBanner;
     private javax.swing.JPanel taskPanel;
     private javax.swing.JLabel tbIcon;
@@ -287,6 +321,17 @@ public class TaskDialogScreen extends javax.swing.JDialog {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+    
+    public void hideErrorFields(){
+        jLabelDeadlineError.setVisible(false);
+        jLabelNameError.setVisible(false);
+        
+    }
+    
+    public boolean isFieldsValid(){
+       
+        return (!tbNameField.getText().isEmpty())&& (!tpDeadlineField.getText().isEmpty());
     }
 
 

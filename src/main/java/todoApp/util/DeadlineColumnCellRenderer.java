@@ -36,7 +36,4 @@ public class DeadlineColumnCellRenderer extends DefaultTableCellRenderer {
     
     }
     
-    
-    
-    
 }
